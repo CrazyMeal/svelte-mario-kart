@@ -1,9 +1,7 @@
+<!-- Using https://github.com/rob-balfre/svelte-select -->
 <script>
-	// import AutocompleteInput from './AutocompleteInput.svelte';
+	import Select from 'svelte-select';
 
-	import AutoComplete from "simple-svelte-autocomplete";
-
-	
 	const tracks = [
         'Champidrome', 'Parc Glougloop', 'Piste aux délices', 'Temple Thwomp',
         'Circuit Mario', 'Promenade Toad', 'Manoir Trempé', 'Cascades Maskass',
@@ -21,18 +19,22 @@
 	
 	let selectedTrack;
 
-	$: {
-		console.log(selectedTrack);
+	$: if(selectedTrack) {
+		console.log(selectedTrack.value);
 	}
 </script>
 
 <style>
-	main> :global(.autocomplete) {
-		width: 200px;
+	.themed {
+		max-width: 50%;
+		--border: 1px solid grey;
+		--borderRadius: 10px;
+		--placeholderColor: grey;
 	}
 </style>
 
 <main>
-	<!-- <AutocompleteInput items={availableTracks}></AutocompleteInput> -->
-	<AutoComplete items={tracks} bind:selectedItem={selectedTrack} />
+	<div class="themed">
+		<Select items={tracks} bind:selectedValue={selectedTrack}></Select>
+	</div>
 </main>
