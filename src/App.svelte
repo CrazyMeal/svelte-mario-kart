@@ -1,40 +1,92 @@
-<!-- Using https://github.com/rob-balfre/svelte-select -->
 <script>
-	import Select from 'svelte-select';
+  import Select from "svelte-select";
 
-	const tracks = [
-        'Champidrome', 'Parc Glougloop', 'Piste aux délices', 'Temple Thwomp',
-        'Circuit Mario', 'Promenade Toad', 'Manoir Trempé', 'Cascades Maskass',
-        'Aéroport Azur', 'Lagon Tourbillon', 'Club Mario', 'Descente givrée',
-        'Voie céleste', 'Désert Toussec', 'Château de Bowser', 'Route Arc-en-ciel',
-        'GCN Circuit Yoshi', 'Arène d\'Excitebike', 'Route du dragon', 'Mute City',
-        'GCN Parc Baby', 'GBA Pays Fromage', 'Passage Feuillage', 'Animal Crossing',
-        'Wii Prairie Meuh Meuh', 'GBA Circuit Mario', 'DS Plage Cheep Cheep', 'N64 Autoroute Toad',
-        'GCN Désert Sec Sec', 'SNES Plaine Donut 3', 'N64 Autodrome royal', '3DS Forêt tropicale DK',
-        'DS Stade Wario', 'GCN Royaume Sorbet', '3DS Piste musicale', 'N64 Vallée Yoshi',
-        'DS Horloge Tic-Tac', '3DS Égout Piranha', 'Wii Volcan grondant', 'N64 Route Arc-en-ciel',
-        'Wii Mine Wario', 'SNES Route Arc-en-ciel', 'Station Glagla', 'Circuit d\'Hyrule',
-        '3DS Koopapolis', 'GBA Route Ruban', 'Métro Turbo', 'Big Blue',
-	];
-	
-	let selectedTrack;
+  import { tracks } from "./stores/readables/tracks.js";
+  import { rankings } from "./stores/readables/rankings.js";
 
-	$: if(selectedTrack) {
-		console.log(selectedTrack.value);
-	}
+  import { trackResults } from "./stores/writables/track-results.js";
+
+  let selectedTrack;
+  let selectedRank;
+
+  let results;
+  trackResults.subscribe((value) => {
+    console.log("Before value: ", value);
+    results = value;
+  });
+
+  function addRandomResult() {
+    trackResults.update((results) => [
+      ...results,
+      { track: selectedTrack.value, rank: selectedRank },
+    ]);
+  }
 </script>
 
 <style>
-	.themed {
-		max-width: 50%;
-		--border: 1px solid grey;
-		--borderRadius: 10px;
-		--placeholderColor: grey;
-	}
+  .custom-input {
+    border: var(--border, 1px solid #d8dbdf);
+    border-radius: var(--borderRadius, 3px);
+    height: var(--height, 42px);
+    --padding: 0 16px;
+    padding: var(--padding);
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  :global(.position-suffix) {
+    font-size: 0.75em;
+    vertical-align: top;
+  }
+
+  :global(.selectedItem) {
+    overflow-y: hidden;
+  }
 </style>
 
-<main>
-	<div class="themed">
-		<Select items={tracks} bind:selectedValue={selectedTrack}></Select>
-	</div>
-</main>
+<!-- Using https://github.com/rob-balfre/svelte-select -->
+
+
+
+	
+  <div class="container mx-auto flex justify-center p-8">
+    <table class="table-auto">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">Course</th>
+          <th class="px-4 py-2">Position</th>
+          <th class="px-4 py-2">Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each results as result}
+          <tr>
+            <td class="border px-4 py-2">{result.track}</td>
+            <td class="border px-4 py-2">{result.rank.value.key}</td>
+            <td class="border px-4 py-2">{result.rank.value.points}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container mx-auto flex p-8">
+    <Select
+      containerClasses="flex-1 m-3"
+      items={$tracks}
+      bind:selectedValue={selectedTrack}
+      placeholder="Course" />
+    <Select
+      containerClasses="flex-1 m-3"
+      items={rankings}
+      bind:selectedValue={selectedRank}
+      placeholder="Classement" />
+    <button
+      class="flex-1 m-3 bg-blue-500 hover:bg-blue-700 text-white font-bold
+      rounded"
+      on:click={addRandomResult}>
+      Add
+    </button>
+  </div>
+
