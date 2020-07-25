@@ -1,5 +1,6 @@
 <script>
   import Select from "svelte-select";
+  import RankingLine from "./RankingLine.svelte";
 
   import { tracks } from "./stores/readables/tracks.js";
   import { rankings } from "./stores/readables/rankings.js";
@@ -11,7 +12,6 @@
 
   let results;
   trackResults.subscribe((value) => {
-    console.log("Before value: ", value);
     results = value;
   });
 
@@ -24,17 +24,6 @@
 </script>
 
 <style>
-  .custom-input {
-    border: var(--border, 1px solid #d8dbdf);
-    border-radius: var(--borderRadius, 3px);
-    height: var(--height, 42px);
-    --padding: 0 16px;
-    padding: var(--padding);
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-
   :global(.position-suffix) {
     font-size: 0.75em;
     vertical-align: top;
@@ -47,46 +36,40 @@
 
 <!-- Using https://github.com/rob-balfre/svelte-select -->
 
+<main class="h-screen bg-gray-200">
 
+  <div class="grid grid-rows-10 grid-flow-col h-full">
 
-	
-  <div class="container mx-auto flex justify-center p-8">
-    <table class="table-auto">
-      <thead>
-        <tr>
-          <th class="px-4 py-2">Course</th>
-          <th class="px-4 py-2">Position</th>
-          <th class="px-4 py-2">Points</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="row-span-1 col-span-2	">
+      <div class="container mx-auto flex p-3">
+        <Select
+		      containerClasses="flex-1 m-3"
+		      isClearable="false"
+          items={$tracks}
+          bind:selectedValue={selectedTrack}
+          placeholder="Course" />
+        <Select
+		      containerClasses="flex-1 m-3"
+		      isClearable="false"
+          items={rankings}
+          bind:selectedValue={selectedRank}
+          placeholder="Classement" />
+        <button
+          class="flex-1 m-3 bg-teal-400 text-white font-bold rounded"
+          on:click={addRandomResult}>
+          Add
+        </button>
+      </div>
+    </div>
+    <div class="row-span-5 col-span-2">
+      <div class="container mx-auto flex flex-col overflow-y-auto content-start h-full p-3">
+        test
         {#each results as result}
-          <tr>
-            <td class="border px-4 py-2">{result.track}</td>
-            <td class="border px-4 py-2">{result.rank.value.key}</td>
-            <td class="border px-4 py-2">{result.rank.value.points}</td>
-          </tr>
+          <RankingLine {...result}/>
         {/each}
-      </tbody>
-    </table>
+      </div>
+    </div>
+    <div class="row-span-6 col-span-8 p-8">Le graph</div>
   </div>
 
-  <div class="container mx-auto flex p-8">
-    <Select
-      containerClasses="flex-1 m-3"
-      items={$tracks}
-      bind:selectedValue={selectedTrack}
-      placeholder="Course" />
-    <Select
-      containerClasses="flex-1 m-3"
-      items={rankings}
-      bind:selectedValue={selectedRank}
-      placeholder="Classement" />
-    <button
-      class="flex-1 m-3 bg-blue-500 hover:bg-blue-700 text-white font-bold
-      rounded"
-      on:click={addRandomResult}>
-      Add
-    </button>
-  </div>
-
+</main>
