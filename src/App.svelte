@@ -38,19 +38,18 @@
 
 <main class="h-screen bg-gray-200">
 
-  <div class="grid grid-rows-10 grid-flow-col h-full">
-
-    <div class="row-span-1 col-span-2	">
-      <div class="container mx-auto flex p-3">
+  <div class="flex flex-row h-full">
+    <div class="flex flex-col flex-1">
+      <div class="flex p-3">
         <Select
-		      containerClasses="flex-1 m-3"
-		      isClearable="false"
+          containerClasses="flex-1 m-3"
+          isClearable="false"
           items={$tracks}
           bind:selectedValue={selectedTrack}
           placeholder="Course" />
         <Select
-		      containerClasses="flex-1 m-3"
-		      isClearable="false"
+          containerClasses="flex-1 m-3"
+          isClearable="false"
           items={rankings}
           bind:selectedValue={selectedRank}
           placeholder="Classement" />
@@ -60,16 +59,15 @@
           Add
         </button>
       </div>
-    </div>
-    <div class="row-span-5 col-span-2">
-      <div class="container mx-auto flex flex-col overflow-y-auto content-start h-full p-3">
-        test
+      
+      <div class="flex flex-col container h-full p-3 overflow-y-auto content-start">
         {#each results as result}
-          <RankingLine {...result}/>
+          <RankingLine {...result} />
         {/each}
       </div>
     </div>
-    <div class="row-span-6 col-span-8 p-8">Le graph</div>
+
+    <div class="flex flex-1">Le graph</div>
   </div>
 
 </main>
