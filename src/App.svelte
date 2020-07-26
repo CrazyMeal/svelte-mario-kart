@@ -15,15 +15,19 @@
   let results;
   let score;
 
+  Array.prototype.move = function (from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+  };
+
   trackResults.subscribe((value) => {
     results = value;
-  });
-
-  $: {
+    
     score = results
       .map(result => result.rank.value.points)
       .reduce((previousScore, currentPoints) => previousScore + currentPoints, 0);
-  }
+
+      console.log('Results changed: ', results);
+  });
 
   function addResult() {
     if (selectedTrack && selectedRank) {
@@ -39,6 +43,28 @@
 
   function removeResult(event) {
     trackResults.update((results) => results.filter(result => result.id !== event.detail.id));
+  }
+
+  function pushUp(event) {
+    const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
+
+    if (indexOfResultToMove !== -1 && indexOfResultToMove !== 0) {
+      trackResults.update((results) => {
+        results.move(indexOfResultToMove, indexOfResultToMove - 1);
+        return results;
+      });
+    }
+  }
+
+  function pushDown(event) {
+    const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
+
+    if (indexOfResultToMove !== -1 && indexOfResultToMove + 1 !== results.length) {
+      trackResults.update((results) => {
+        results.move(indexOfResultToMove, indexOfResultToMove + 1);
+        return results;
+      });
+    }
   }
 </script>
 
@@ -81,7 +107,7 @@
       
       <div class="flex flex-col container h-full p-3 overflow-y-auto content-start">
         {#each results as result}
-          <RankingLine {...result} on:remove={removeResult} />
+          <RankingLine {...result} on:remove={removeResult} on:pushUp={pushUp} on:pushDown={pushDown}/>
         {/each}
       </div>
     </div>
