@@ -3,6 +3,8 @@
 
   export let results = [];
 
+  const defaultLabels = ['Start', '']; // Hacky init so lib doesn't throw a lot of warnings
+
   //  The Chart returned from frappe
   let chart = null;
 
@@ -10,7 +12,7 @@
   let chartRef;
 
   let data = {
-    labels: ['Start', ''], // Hacky init so lib doesn't throw a lot of warnings
+    labels: defaultLabels, // Hacky init so lib doesn't throw a lot of warnings
     datasets: [{
       chartType: "line",
       values: [0],
@@ -19,11 +21,11 @@
 
   
 
-  $: if (results && results.length !== 0) {
+  $: if (results) {
     let sum = 0;
 
     data = {
-      labels: ["Start", ...results.map(result => result.track)],
+      labels: results.length === 0 ? defaultLabels : ["Start", ...results.map(result => result.track)],
       datasets: [{
         //chartType: "line",
         values: [0, ...results.map(result => sum = (sum || 0) + result.rank.value.points )],

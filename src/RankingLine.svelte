@@ -8,7 +8,6 @@
     const dispatch = createEventDispatcher();
 
     function removeResult(id) {
-        console.log('Line emitting remove for id: ', id);
         dispatch('remove', { id: id });
     }
 
