@@ -12,7 +12,7 @@
         <span class="material-icons">keyboard_arrow_down</span>
     </div>
     <div class="result-info flex content-center justify-center w-full p-3">
-        {track} -  {@html rank.label}  - {rank.value.points} points
+        {track} -  {@html rank.label} - {rank.value.points} points
     </div>
     <div>
         <span class="material-icons">clear</span>

@@ -10,17 +10,29 @@
 
   let selectedTrack;
   let selectedRank;
-
   let results;
+  let score;
+
   trackResults.subscribe((value) => {
     results = value;
   });
 
-  function addRandomResult() {
-    trackResults.update((results) => [
-      ...results,
-      { track: selectedTrack.value, rank: selectedRank },
-    ]);
+  $: {
+    score = results
+      .map(result => result.rank.value.points)
+      .reduce((previousScore, currentPoints) => previousScore + currentPoints, 0);
+  }
+
+  function addResult() {
+    if (selectedTrack && selectedRank) {
+      trackResults.update((results) => [
+        ...results,
+        { track: selectedTrack.value, rank: selectedRank },
+      ]);
+
+      selectedTrack = null;
+      selectedRank = null;
+    }
   }
 </script>
 
@@ -56,7 +68,7 @@
           placeholder="Classement" />
         <button
           class="flex-1 m-3 bg-teal-400 text-white font-bold rounded"
-          on:click={addRandomResult}>
+          on:click={addResult}>
           Ajouter
         </button>
       </div>
@@ -68,7 +80,8 @@
       </div>
     </div>
 
-    <div class="flex flex-1">
+    <div class="flex flex-col flex-1">
+      <div class="container font-bold pt-8 p-3">Score: {score}</div>
       <TracksChart {results} />
     </div>
   </div>
