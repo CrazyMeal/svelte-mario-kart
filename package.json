@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "sirv-cli": "^0.4.4",
-    "svelte-select": "^3.10.0"
+    "svelte-select": "^3.10.0",
+    "uuid": "^8.2.0"
   }
 }

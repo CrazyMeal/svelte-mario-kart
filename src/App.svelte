@@ -1,4 +1,6 @@
 <script>
+  import { v4 as uuidv4 } from 'uuid';
+
   import Select from "svelte-select";
   import RankingLine from "./RankingLine.svelte";
   import TracksChart from "./TracksChart.svelte";
@@ -27,12 +29,16 @@
     if (selectedTrack && selectedRank) {
       trackResults.update((results) => [
         ...results,
-        { track: selectedTrack.value, rank: selectedRank },
+        { id: uuidv4(), track: selectedTrack.value, rank: selectedRank },
       ]);
 
       selectedTrack = null;
       selectedRank = null;
     }
+  }
+
+  function removeResult(event) {
+    trackResults.update((results) => results.filter(result => result.id !== event.detail.id));
   }
 </script>
 
@@ -75,7 +81,7 @@
       
       <div class="flex flex-col container h-full p-3 overflow-y-auto content-start">
         {#each results as result}
-          <RankingLine {...result} />
+          <RankingLine {...result} on:remove={removeResult} />
         {/each}
       </div>
     </div>

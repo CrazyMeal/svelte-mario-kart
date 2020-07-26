@@ -1,20 +1,31 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+
+    export let id;
     export let track;
     export let rank;
+
+    const dispatch = createEventDispatcher();
+
+    function removeResult(id) {
+        console.log('Line emitting remove for id: ', id);
+        dispatch('remove', { id: id });
+    }
+
 </script>
 
 <style>
 </style>
 
-<div class="flex mb-1 mt-1 p-1 bg-teal-400 text-white font-bold shadow-md">
+<div id={id} class="flex mb-1 mt-1 p-1 bg-teal-400 text-white font-bold shadow-md">
     <div class="order-arrows flex flex-col">
-        <span class="material-icons">keyboard_arrow_up</span>
-        <span class="material-icons">keyboard_arrow_down</span>
+        <button><span class="material-icons">keyboard_arrow_up</span></button>
+        <button><span class="material-icons">keyboard_arrow_down</span></button>
     </div>
     <div class="result-info flex content-center justify-center w-full p-3">
         {track} -  {@html rank.label} - {rank.value.points} points
     </div>
     <div>
-        <span class="material-icons">clear</span>
+        <button on:click={removeResult(id)}><span class="material-icons">clear</span></button>
     </div>
 </div>

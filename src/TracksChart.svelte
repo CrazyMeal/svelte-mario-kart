@@ -25,7 +25,7 @@
     data = {
       labels: ["Start", ...results.map(result => result.track)],
       datasets: [{
-        chartType: "line",
+        //chartType: "line",
         values: [0, ...results.map(result => sum = (sum || 0) + result.rank.value.points )],
       }]
     }
@@ -35,9 +35,8 @@
     chart = new frappe.Chart(chartRef, {
       // or a DOM element,
       // new Chart() in case of ES6 module with above usage
-      title: "Progression",
       data: data,
-      type: "axis-mixed", // or 'bar', 'line', 'scatter', 'pie', 'percentage'
+      type: "line", // or 'axis-mixed', 'bar', 'line', 'scatter', 'pie', 'percentage'
       height: 500,
       colors: ["#68D391"],
     });
