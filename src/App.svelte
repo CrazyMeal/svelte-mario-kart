@@ -1,6 +1,7 @@
 <script>
   import Select from "svelte-select";
   import RankingLine from "./RankingLine.svelte";
+  import TracksChart from "./TracksChart.svelte";
 
   import { tracks } from "./stores/readables/tracks.js";
   import { rankings } from "./stores/readables/rankings.js";
@@ -56,7 +57,7 @@
         <button
           class="flex-1 m-3 bg-teal-400 text-white font-bold rounded"
           on:click={addRandomResult}>
-          Add
+          Ajouter
         </button>
       </div>
       
@@ -67,7 +68,9 @@
       </div>
     </div>
 
-    <div class="flex flex-1">Le graph</div>
+    <div class="flex flex-1">
+      <TracksChart {results} />
+    </div>
   </div>
 
 </main>
