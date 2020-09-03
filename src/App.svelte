@@ -25,8 +25,6 @@
     score = results
       .map(result => result.rank.value.points)
       .reduce((previousScore, currentPoints) => previousScore + currentPoints, 0);
-
-      console.log('Results changed: ', results);
   });
 
   function addResult() {
@@ -45,7 +43,7 @@
     trackResults.update((results) => results.filter(result => result.id !== event.detail.id));
   }
 
-  function pushUp(event) {
+  function pushDown(event) {
     const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
 
     if (indexOfResultToMove !== -1 && indexOfResultToMove !== 0) {
@@ -56,7 +54,7 @@
     }
   }
 
-  function pushDown(event) {
+  function pushUp(event) {
     const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
 
     if (indexOfResultToMove !== -1 && indexOfResultToMove + 1 !== results.length) {
@@ -105,7 +103,7 @@
         </button>
       </div>
       
-      <div class="flex flex-col container h-full p-3 overflow-y-auto content-start">
+      <div class="flex flex-col-reverse container h-full p-3 overflow-y-auto justify-end">
         {#each results as result}
           <RankingLine {...result} on:remove={removeResult} on:pushUp={pushUp} on:pushDown={pushDown}/>
         {/each}
