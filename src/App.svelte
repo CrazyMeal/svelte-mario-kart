@@ -1,69 +1,14 @@
 <script>
-  import { v4 as uuidv4 } from 'uuid';
 
-  import Select from "svelte-select";
-  import RankingLine from "./RankingLine.svelte";
   import TracksChart from "./TracksChart.svelte";
-
-  import { tracks } from "./stores/readables/tracks.js";
-  import { rankings } from "./stores/readables/rankings.js";
-
-  import { trackResults } from "./stores/writables/track-results.js";
-
-  let selectedTrack;
-  let selectedRank;
-  let results;
-  let score;
+  import TrackSelector from "./TrackSelector.svelte";
+  import RankingBoard from "./RankingBoard.svelte";
+  import Score from "./Score.svelte";
 
   Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
   };
 
-  trackResults.subscribe((value) => {
-    results = value;
-    
-    score = results
-      .map(result => result.rank.value.points)
-      .reduce((previousScore, currentPoints) => previousScore + currentPoints, 0);
-  });
-
-  function addResult() {
-    if (selectedTrack && selectedRank) {
-      trackResults.update((results) => [
-        ...results,
-        { id: uuidv4(), track: selectedTrack.value, rank: selectedRank },
-      ]);
-
-      selectedTrack = null;
-      selectedRank = null;
-    }
-  }
-
-  function removeResult(event) {
-    trackResults.update((results) => results.filter(result => result.id !== event.detail.id));
-  }
-
-  function pushDown(event) {
-    const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
-
-    if (indexOfResultToMove !== -1 && indexOfResultToMove !== 0) {
-      trackResults.update((results) => {
-        results.move(indexOfResultToMove, indexOfResultToMove - 1);
-        return results;
-      });
-    }
-  }
-
-  function pushUp(event) {
-    const indexOfResultToMove = results.map(result => result.id).indexOf(event.detail.id);
-
-    if (indexOfResultToMove !== -1 && indexOfResultToMove + 1 !== results.length) {
-      trackResults.update((results) => {
-        results.move(indexOfResultToMove, indexOfResultToMove + 1);
-        return results;
-      });
-    }
-  }
 </script>
 
 <style>
@@ -79,41 +24,16 @@
 
 <!-- Using https://github.com/rob-balfre/svelte-select -->
 
-<main class="h-screen bg-gray-200">
-
-  <div class="flex flex-row h-full">
+<main class="h-screen">
+  <div class="flex flex-col lg:flex-row h-full">
     <div class="flex flex-col flex-1">
-      <div class="flex p-3">
-        <Select
-          containerClasses="flex-1 m-3"
-          isClearable="false"
-          items={$tracks}
-          bind:selectedValue={selectedTrack}
-          placeholder="Course" />
-        <Select
-          containerClasses="flex-1 m-3"
-          isClearable="false"
-          items={rankings}
-          bind:selectedValue={selectedRank}
-          placeholder="Classement" />
-        <button
-          class="flex-1 m-3 bg-teal-400 text-white font-bold rounded"
-          on:click={addResult}>
-          Ajouter
-        </button>
-      </div>
-      
-      <div class="flex flex-col-reverse container h-full p-3 overflow-y-auto justify-end">
-        {#each results as result}
-          <RankingLine {...result} on:remove={removeResult} on:pushUp={pushUp} on:pushDown={pushDown}/>
-        {/each}
-      </div>
+      <TrackSelector />
+      <RankingBoard />
     </div>
 
     <div class="flex flex-col flex-1">
-      <div class="container font-bold pt-8 p-3">Score: {score}</div>
-      <TracksChart {results} />
+      <Score />
+      <TracksChart />
     </div>
   </div>
-
 </main>

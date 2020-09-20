@@ -1,7 +1,7 @@
 <script>
   import { onMount, afterUpdate, onDestroy } from "svelte";
 
-  export let results = [];
+  import { trackResults } from "./stores/writables/track-results.js";
 
   const defaultLabels = ['Start', '']; // Hacky init so lib doesn't throw a lot of warnings
 
@@ -19,7 +19,8 @@
     }],
   };
 
-  
+  let results;
+  trackResults.subscribe((value) => results = value);
 
   $: if (results) {
     let sum = 0;
